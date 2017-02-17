@@ -132,3 +132,28 @@ function render_tooltips( $tooltips ) {
 	return $tooltips;
 }
 add_filter( 'gform_tooltips', __NAMESPACE__ . '\render_tooltips' );
+
+/**
+ * Inject autocomplete attributes into individual form fields.
+ *
+ * @param string   $markup The markup for an individual field.
+ * @param GF_Field $field  The Gravity Forms Field object.
+ */
+function inject_autocomplete_attribute( $markup, $field ) {
+	if ( ! isset( $field->autocompleteAttr ) || ! $field->autocompleteAttr ) {
+		return $markup;
+	}
+
+	// Find the first input, select, or textarea element.
+	$regex = '/\<(?:input|select|textarea)\s+[^\>]+?(\s*\/?\>){1}/im';
+
+	if ( ! preg_match( $regex, $markup, $input ) ) {
+		return $markup;
+	}
+
+	$autocomplete = sprintf( ' autocomplete="%s"', esc_attr( $field->autocompleteAttr ) );
+	$element      = str_replace( $input[1], $autocomplete . $input[1], $input[0] );
+
+	return str_replace( $input[0], $element, $markup );
+}
+add_filter( 'gform_field_content', __NAMESPACE__ . '\inject_autocomplete_attribute', 10, 2 );

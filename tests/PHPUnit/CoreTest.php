@@ -63,4 +63,77 @@ class CoreTest extends \Growella\GravityForms\AutocompleteFields\TestCase {
 
 		$this->assertArrayHasKey( 'form_field_autocomplete_attr', render_tooltips( array() ) );
 	}
+
+	public function testInjectAutocompleteAttribute() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = 'email';
+
+		M::wpPassthruFunction( 'esc_attr' );
+
+		$this->assertEquals(
+			'<input type="email" autocomplete="email">',
+			inject_autocomplete_attribute( '<input type="email">', $field )
+		);
+	}
+
+	public function testInjectAutocompleteAttributeHandlesSelfClosingElements() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = 'email';
+
+		M::wpPassthruFunction( 'esc_attr' );
+
+		$this->assertEquals(
+			'<input type="email" autocomplete="email" />',
+			inject_autocomplete_attribute( '<input type="email" />', $field )
+		);
+	}
+
+	public function testInjectAutocompleteAttributeWithRealEmailInput() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = 'email';
+		$markup = <<<EOT
+<label class='gfield_label' for='input_7_1' >Email<span class='gfield_required'>*</span></label>
+<div class='ginput_container ginput_container_email'>
+	<input name='input_1' id='input_7_1' type='email' value='' class='medium' tabindex='1'   placeholder='Email'/>
+</div>
+<div class='gfield_description'>Input description</div>
+EOT;
+
+		M::wpPassthruFunction( 'esc_attr' );
+
+		$this->assertContains(
+			"<input name='input_1' id='input_7_1' type='email' value='' class='medium' tabindex='1'   placeholder='Email' autocomplete=\"email\"/>",
+			inject_autocomplete_attribute( $markup, $field )
+		);
+	}
+
+	public function testInjectAutocompleteAttributeChecksThatAutocompleteAttrIsSet() {
+		$field  = new \stdClass;
+
+		$this->assertEquals(
+			'<input type="email" />',
+			inject_autocomplete_attribute( '<input type="email" />', $field )
+		);
+	}
+
+	public function testInjectAutocompleteAttributeChecksThatAutocompleteAttrIsNotEmpty() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = '';
+
+		$this->assertEquals(
+			'<input type="email" />',
+			inject_autocomplete_attribute( '<input type="email" />', $field )
+		);
+	}
+
+	public function testInjectAutocompleteAttributeReturnsEarlyIfNoInputIsFound() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = 'email';
+		$markup = uniqid();
+
+		$this->assertEquals(
+			$markup,
+			inject_autocomplete_attribute( $markup, $field )
+		);
+	}
 }
