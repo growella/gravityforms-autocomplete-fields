@@ -1,0 +1,31 @@
+{
+    "name": "growella/gravityforms-autocomplete-fields",
+    "description": "Configure autocomplete attributes on Gravity Forms' inputs.",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve Grunwell",
+            "email": "steve@stevegrunwell.com",
+            "homepage": "https://stevegrunwell.com"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/growella/gravityforms-autocomplete-fields",
+        "issues": "https://github.com/growella/gravityforms-autocomplete-fields/issues"
+    },
+    "require-dev": {
+        "10up/wp_mock": "dev-master",
+        "phpunit/phpunit": "^5.7",
+        "codeclimate/php-test-reporter": "^0.3.0",
+        "stevegrunwell/wp-enforcer": "^0.4.2"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "wp-enforcer"
+        ],
+        "post-update-cmd": [
+            "wp-enforcer"
+        ]
+    }
+}
