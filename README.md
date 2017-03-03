@@ -40,3 +40,40 @@ Upon activation, the plugin will add "Autocomplete Attribute" settings to every 
 ![Gravity Forms field settings with the "Autocomplete Attribute"](screenshots/screenshot-1.png)
 
 Selecting a value here will inject the corresponding `autocomplete` attribute when the form is rendered.
+
+
+## Filter reference
+
+Gravity Forms: Autocomplete Fields offers a few filters that can be used to further customize the plugin's functionality.
+
+
+### gform_autocomplete_attribute
+
+This filter is called immediately before the `autocomplete` attribute is injected into an input. Use this filter if you need to further customize the attribute to [include any detail tokens like "section-", "shipping", etc.](https://html.spec.whatwg.org/multipage/forms.html#autofill-detail-tokens)
+
+Type | Variable | Description
+---- | -------- | -----------
+string | `$attribute` | The current `autocomplete` attribute value.
+GF_Field | `$field` | The current Gravity Forms field object.
+
+#### Example
+
+In this example, we're checking the `$field['cssClass']` for the class of "shipping" and, if it's found, we're prepending the `shipping` detail token to the autocomplete attribute value.
+
+```php
+/**
+ * If an address input has class 'shipping', add 'shipping' to the autocomplete attribute.
+ *
+ * @param string   $attribute The autocomplete attribute for this input.
+ * @param GF_Field $field     The Gravity Forms field object.
+ * @return string The possibly-modified $attribute string.
+ */
+function mytheme_inject_shipping_autocomplete_token( $attribute, $field ) {
+	if ( in_array( 'shipping', explode( ' ', $field['cssClass'] ), true ) ) {
+		$attribute = 'shipping ' . $attribute;
+	}
+
+	return $attribute;
+}
+add_filter( 'gform_autocomplete_attribute', 'mytheme_inject_shipping_autocomplete_token', 10, 2 );
+```
