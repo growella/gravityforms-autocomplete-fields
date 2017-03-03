@@ -136,4 +136,20 @@ EOT;
 			inject_autocomplete_attribute( $markup, $field )
 		);
 	}
+
+	public function testInjectAutocompleteAttributeAppliesFilter() {
+		$field  = new \stdClass;
+		$field->autocompleteAttr = 'email';
+
+		M::wpPassthruFunction( 'esc_attr' );
+
+		M::onFilter( 'gform_autocomplete_attribute' )
+			->with( 'email', $field )
+			->reply( 'special email' );
+
+		$this->assertEquals(
+			'<input type="email" autocomplete="special email">',
+			inject_autocomplete_attribute( '<input type="email">', $field )
+		);
+	}
 }

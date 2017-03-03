@@ -151,7 +151,15 @@ function inject_autocomplete_attribute( $markup, $field ) {
 		return $markup;
 	}
 
-	$autocomplete = sprintf( ' autocomplete="%s"', esc_attr( $field->autocompleteAttr ) );
+	/**
+	 * Filter the autocomplete attribute before it's injected into an input.
+	 *
+	 * @param string   $attribute The autocomplete attribute for this input.
+	 * @param GF_Field $field     The Gravity Forms field object.
+	 */
+	$attribute = apply_filters( 'gform_autocomplete_attribute', $field->autocompleteAttr, $field );
+
+	$autocomplete = sprintf( ' autocomplete="%s"', esc_attr( $attribute ) );
 	$element      = str_replace( $input[1], $autocomplete . $input[1], $input[0] );
 
 	return str_replace( $input[0], $element, $markup );
