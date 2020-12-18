@@ -17,6 +17,8 @@ namespace Growella\GravityForms\AutocompleteFields\Core;
 function get_autocomplete_values() {
 	$values = array(
 		'name'                 => _x( 'Full name', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
+		'given-name'           => _x( 'First/given name', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
+		'family-name'          => _x( 'Last/family name', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
 		'nickname'             => _x( 'Nickname/handle', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
 		'organization-title'   => _x( 'Job title', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
 		'username'             => _x( 'Username', 'autocomplete attribute label', 'gravityforms-autocomplete-fields' ),
